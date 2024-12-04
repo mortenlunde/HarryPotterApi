@@ -11,8 +11,9 @@ h1:focus {
     outline: none;
 }
 
+/*noinspection ALL*/
 body {
-    font-family: 'Harry Potter', Arial, sans-serif; /* Use custom Harry Potter font */
+    font-family: 'Harry Potter', Arial, sans-serif;
     background-image: linear-gradient(to right, #0f0c29, #302b63, #24243e);
     color: #fff;
     margin: 0;
@@ -22,17 +23,18 @@ body {
 
 .top-left {
     position: absolute;
-    top: 10px; /* Adjust for padding */
-    left: 10px; /* Adjust for padding */
-    z-index: 1000; /* Ensure it stays above other content */
+    top: 10px;
+    left: 10px;
+    z-index: 1000;
 }
 
+/*noinspection CssUnknownTarget*/
 a, input, textarea, button {
-    cursor: url("/src/Wand_A.cur"), auto; /* Ensure cursor remains consistent */
+    cursor: url("/src/Wand_A.cur"), auto;
 }
 
 a:hover, input:hover, textarea:hover, button:hover {
-    text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00; /* Halo effect */
+    text-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00;
 }
 
 button:hover, a:hover {
@@ -49,7 +51,7 @@ input, textarea {
 }
 
 input:hover, textarea:hover {
-    box-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00; /* Halo effect for input fields */
+    box-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00;
 }
 
 .valid.modified:not([type=checkbox]) {
@@ -105,8 +107,8 @@ input:hover, textarea:hover {
 }
 
 .breadcrumb-item.active {
-    color: #fff !important; /* Set the active item to yellow */
-    font-weight: bold; /* Optional, to emphasize the active breadcrumb */
+    color: #fff !important;
+    font-weight: bold;
 }
 
 .breadcrumb-header a {

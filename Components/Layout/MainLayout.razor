@@ -1,7 +1,7 @@
 ﻿@inherits LayoutComponentBase
 
 <div class="top-left">
-    @if (IsPlaying)
+    @if (_isPlaying)
     {
         <Icon Name="IconName.VolumeUp" Size="IconSize.x2" @onclick="ToggleMusic" class="icon" />
     }
@@ -25,14 +25,14 @@
 </div>
 
 @code {
-    private bool IsPlaying;
+    private bool _isPlaying;
 
     [Inject]
-    private IJSRuntime JSRuntime { get; set; } = default!;
+    private IJSRuntime JsRuntime { get; set; } = default!;
 
     private async Task ToggleMusic()
     {
-        await JSRuntime.InvokeVoidAsync("toggleAudioPlayback", IsPlaying);
-        IsPlaying = !IsPlaying;
+        await JsRuntime.InvokeVoidAsync("toggleAudioPlayback", _isPlaying);
+        _isPlaying = !_isPlaying;
     }
 }
