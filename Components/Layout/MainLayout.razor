@@ -1,0 +1,38 @@
+﻿@inherits LayoutComponentBase
+
+<div class="top-left">
+    @if (IsPlaying)
+    {
+        <Icon Name="IconName.VolumeUp" Size="IconSize.x2" @onclick="ToggleMusic" class="icon" />
+    }
+    else
+    {
+        <Icon Name="IconName.VolumeMute" Size="IconSize.x2" @onclick="ToggleMusic" class="icon" />
+    }
+</div>
+
+<audio id="background-audio" loop>
+    <source src="/src/hp.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+</audio>
+
+@Body
+
+<div id="blazor-error-ui" data-nosnippet>
+    An unhandled error has occurred.
+    <a href="." class="reload">Reload</a>
+    <span class="dismiss">🗙</span>
+</div>
+
+@code {
+    private bool IsPlaying;
+
+    [Inject]
+    private IJSRuntime JSRuntime { get; set; } = default!;
+
+    private async Task ToggleMusic()
+    {
+        await JSRuntime.InvokeVoidAsync("toggleAudioPlayback", IsPlaying);
+        IsPlaying = !IsPlaying;
+    }
+}

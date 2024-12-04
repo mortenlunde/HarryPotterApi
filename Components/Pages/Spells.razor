@@ -1,0 +1,239 @@
+@page "/Spells"
+@using Morten_Lunde_Eksamen_Emne_6.Models
+@using Morten_Lunde_Eksamen_Emne_6.Services
+@inject IHarryPotterService HarryPotterService
+
+<title>Spells</title>
+<div class="main-container">
+    <Breadcrumb Items="_navItems" Class="breadcrumb-header" />
+
+    @if (_spells == null || !_spells.Any())
+    {
+        <div class="d-flex justify-content-center">
+            <Spinner Type="SpinnerType.Dots" Class="me-3" Color="SpinnerColor.Warning" Size="SpinnerSize.Large"/>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 page-column">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (Spell entry in _pagedSpellsPage1)
+                        {
+                            <tr>
+                                <td style="white-space: nowrap; font-weight: bold">@entry.name</td>
+                                <td>@entry.description</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="col-md-6 page-column">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (Spell entry in _pagedSpellsPage2)
+                        {
+                            <tr>
+                                <td style="white-space: nowrap; font-weight: bold">@entry.name</td>
+                                <td>@entry.description</td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <button class="magic-card" @onclick="PreviousPage" disabled="@(_currentPage == 1)">Previous</button>
+                <button class="magic-card" @onclick="NextPage" disabled="@(_currentPage == _totalPages)">Next</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Spell>? _spells;
+    private List<Spell> _pagedSpellsPage1 = new List<Spell>();
+    private List<Spell> _pagedSpellsPage2 = new List<Spell>();
+    private const int PageSize = 8;
+    private int _currentPage = 1;
+    private int _totalPages = 1;
+    private List<BreadcrumbItem>? _navItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _navItems =
+        [
+            new BreadcrumbItem { Text = "Home", Href = "/" },
+            new BreadcrumbItem { Text = "Spells", IsCurrentPage = true }
+        ];
+
+        await LoadSpells();
+        CalculateTotalPages();
+        UpdatePageData();
+    }
+
+    private async Task LoadSpells()
+    {
+        try
+        {
+            _spells = await HarryPotterService.GetSpellsAsync();
+        }
+        catch (Exception ex)
+        {
+            await Console.Error.WriteLineAsync($"Error fetching spells: {ex.Message}");
+            _spells = [];
+        }
+    }
+
+    private void CalculateTotalPages()
+    {
+        if (_spells != null && _spells.Any())
+        {
+            _totalPages = (int)Math.Ceiling((double)_spells.Count / (PageSize * 2));
+        }
+    }
+
+    private void UpdatePageData()
+    {
+        if (_spells != null && _spells.Any())
+        {
+            int pageStartIndex = (_currentPage - 1) * PageSize * 2;
+
+            _pagedSpellsPage1 = _spells.Skip(pageStartIndex).Take(PageSize).ToList();
+            _pagedSpellsPage2 = _spells.Skip(pageStartIndex + PageSize).Take(PageSize).ToList();
+        }
+    }
+
+    private void PreviousPage()
+    {
+        if (_currentPage <= 1) 
+            return;
+        
+        _currentPage--;
+        UpdatePageData();
+    }
+
+    private void NextPage()
+    {
+        if (_currentPage >= _totalPages) 
+            return;
+        
+        _currentPage++;
+        UpdatePageData();
+    }
+}
+
+<style>
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 100vh;
+    }
+
+    .container {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .row {
+        display: flex;
+        height: 100%;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .page-column {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        overflow-y: auto;
+        background: url("/src/0kjMcUe.png") center right;
+        background-size: 1000px;
+        border: 2px solid #b8860b;
+        box-shadow: 5px 0 15px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        margin-right: 10px; 
+    }
+
+    .page-column:last-child {
+        margin-right: 0;
+        box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .table {
+        background-color: transparent;
+        margin-bottom: 0;
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table tbody tr {
+        background-color: transparent;
+    }
+
+    .table tbody tr td {
+        background-color: transparent;
+        border-bottom: 1px solid #b8860b;
+    }
+
+    .table thead tr {
+        background-color: transparent;
+    }
+
+    .table thead tr th {
+        background-color: transparent;
+        padding-top: 10px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #b8860b;
+        color: #b8860b;
+    }
+
+    .d-flex {
+        margin-top: 20px;
+    }
+
+    .d-flex button {
+        flex: 0 0 auto;
+        width: auto;
+        padding: 10px 20px;
+        margin-bottom: 10px;
+    }
+
+    .magic-card {
+        min-width: 120px;
+        background: #f5deb3;
+        border: 2px solid #b8860b;
+        border-radius: 10px;
+        padding: 10px 20px;
+        color: #3e2723;
+        text-align: center;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .magic-card:hover {
+        transform: scale(1.1);
+        box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.5);
+        background: #ffe4c4;
+        cursor: url("/src/Wand_A.cur"), auto;
+    }
+
+</style>

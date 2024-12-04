@@ -1,0 +1,107 @@
+﻿@page "/"
+@inject NavigationManager NavigationManager
+
+<PageTitle>Home</PageTitle>
+
+<div class="main-container">
+    <div class="welcome-container">
+        <h1>Welcome to the Harry Potter universe!</h1>
+    </div>
+    <div class="card-container">
+        <div class="magic-card" @onclick='() => NavigateTo("/characters")'>Characters</div>
+        <div class="magic-card" @onclick='() => NavigateTo("/spells")'>Spells</div>
+    </div>
+    <div class="card-container">
+        <div class="magic-card" @onclick='() => NavigateTo("/videopresentation")'>Video Presentation</div>
+    </div>
+</div>
+
+@code {
+    private void NavigateTo(string url)
+    {
+        NavigationManager.NavigateTo(url);
+    }
+}
+
+<style>
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        text-align: center;
+        gap: 30px;
+    }
+    
+    .welcome-container h1 {
+        font-size: 4rem;
+        color: #ffcc00;
+        font-weight: bold;
+        margin: 0;
+        text-transform: uppercase;
+        text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+    }
+
+    .welcome-container h1::after {
+        background: none;
+        content: attr(data-heading) / "";
+        left: 0;
+        top: 0;
+        z-index: -1;
+        position: absolute;
+        text-shadow:
+            -1px 0 1px #c6bb9f,
+            0 1px 1px #c6bb9f,
+            5px 5px 10px rgba(0, 0, 0, 0.4),
+            -5px -5px 10px rgba(0, 0, 0, 0.4);
+    }
+    
+    .card-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .magic-card {
+        flex: 1;
+        min-width: 400px;
+        background: #f5deb3;
+        border: 2px solid #b8860b;
+        border-radius: 10px;
+        padding: 20px 40px;
+        font-size: 2.5rem;
+        color: #3e2723;
+        text-align: center;
+        box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .magic-card:hover {
+        transform: scale(1.1);
+        box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.5);
+        background: #ffe4c4;
+    }
+    
+    @@media (max-width: 768px) {
+        .welcome-container h1 {
+            color: #fff;
+            position: relative;
+            text-transform: uppercase;
+            font-size: calc(5rem);
+            margin: 0;
+            font-weight: 400;
+        }
+    
+        .magic-card {
+            min-width: 200px;
+            font-size: 1rem;
+            padding: 15px 20px;
+        }
+    
+        .card-container {
+            flex-direction: column;
+        }
+    }
+</style>

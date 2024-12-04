@@ -1,0 +1,159 @@
+@page "/Details/{id:guid}"
+@using Morten_Lunde_Eksamen_Emne_6.Models
+@using Morten_Lunde_Eksamen_Emne_6.Services
+@inject IHarryPotterService HarryPotterService
+
+<title>@_character?.name</title>
+<div class="main-container">
+    <Breadcrumb Items="_navItems" Class="breadcrumb-header" />
+
+@if (_character == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="container">
+
+        <div class="card" style="width: 100%; background: #f5deb3; border: 2px solid #b8860b;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    @if (!string.IsNullOrEmpty(_character.image))
+                    {
+                        <img src="@_character.image" alt="@_character.name" class="img-fluid rounded-start" />
+                    }
+                    else
+                    {
+                        <img src="/images/placeholder.png" alt="Placeholder" class="img-fluid rounded-start" />
+                    }
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h2 class="card-title">@_character.name</h2>
+                        <table class="table table-bordered table-striped">
+                            <tr>
+                                <th>House</th>
+                                <td>@_character.house</td>
+                            </tr>
+                            <tr>
+                                <th>Species</th>
+                                <td>@_character.species</td>
+                            </tr>
+                            <tr>
+                                <th>Gender</th>
+                                <td>@_character.gender</td>
+                            </tr>
+                            <tr>
+                                <th>Date of Birth</th>
+                                <td>@_character.dateOfBirth</td>
+                            </tr>
+                            <tr>
+                                <th>Ancestry</th>
+                                <td>@_character.ancestry</td>
+                            </tr>
+                            <tr>
+                                <th>Eye Colour</th>
+                                <td>@_character.eyeColour</td>
+                            </tr>
+                            <tr>
+                                <th>Hair Colour</th>
+                                <td>@_character.hairColour</td>
+                            </tr>
+                            <tr>
+                                <th>Patronus</th>
+                                <td>@_character.patronus</td>
+                            </tr>
+                            <tr>
+                                <th>Actor</th>
+                                <td>@_character.actor</td>
+                            </tr>
+                            <tr>
+                                <th>Alternative Actor</th>
+                                <td>@string.Join(", ", _character.alternate_actors)</td>
+                            </tr>
+                            <tr>
+                                <th>Alternate Names</th>
+                                <td>@string.Join(", ", _character.alternate_names)</td>
+                            </tr>
+                            <tr>
+                                <th>Wand</th>
+                                <td>
+                                    @if (_character.Wand != null)
+                                    {
+                                        <text>Wood: </text> @_character.Wand.wood<br/>
+                                        <text>core: </text> @_character.Wand.core<br/>
+                                        <text>Length: </text> @_character.Wand.length
+                                    }
+                                    else
+                                    {
+                                        <em>No wand information available</em>
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Alive</th>
+                                <td>@(_character.alive ? "Yes" : "No")</td>
+                            </tr>
+                            <tr>
+                                <th>Wizard</th>
+                                <td>@(_character.wizard ? "Yes" : "No")</td>
+                            </tr>
+                            <tr>
+                                <th>Staff</th>
+                                <td>@(_character.hogwartsStaff ? "Yes" : "No")</td>
+                            </tr>
+                            <tr>
+                                <th>Student</th>
+                                <td>@(_character.hogwartsStudent ? "Yes" : "No")</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+</div>
+@code {
+    [Parameter] public Guid Id { get; set; }
+    private Character? _character;
+    private List<BreadcrumbItem>? _navItems;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        _navItems =
+        [
+            new BreadcrumbItem { Text = "Home", Href = "/" },
+            new BreadcrumbItem { Text = "Characters", Href = "/characters"},
+            new BreadcrumbItem {Text = "Details", IsCurrentPage = true}
+        ];
+        _character = await HarryPotterService.GetCharacterDetailsAsync(Id);
+    }
+}
+
+<style>
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+    }
+
+    .card {
+        max-width: 50%;
+        margin: 0 auto;
+        background: #f5deb3;
+        border: 2px solid #b8860b;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    @@media (max-width: 768px) {
+        .card {
+            max-width: 90%;
+        }
+        .table {
+            font-size: 0.9rem;
+        }
+    }
+</style>

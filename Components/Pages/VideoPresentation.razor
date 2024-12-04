@@ -1,0 +1,70 @@
+@page "/VideoPresentation"
+
+<title>Video Presentation</title>
+<div class="main-container">
+    <Breadcrumb Items="_navItems" Class="breadcrumb-header" />
+
+    @if (_isLoading)
+    {
+        <div class="d-flex justify-content-center">
+            <Spinner Type="SpinnerType.Dots" Class="me-3" Color="SpinnerColor.Warning" Size="SpinnerSize.Large"/>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <video controls width="800" height="500">
+                <source src="@VideoPath" type="video/mp4">
+                Your browser does not support the video tag.
+            </video><br/>
+        </div>
+    }
+</div>
+
+@code {
+    private const string VideoPath = "https://lunde-consult.no/files/Morten_Lunde_Eksamen_Emne_6_Video.mp4";
+    private bool _isLoading = true;
+    private List<BreadcrumbItem>? _navItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _navItems =
+        [
+            new BreadcrumbItem { Text = "Home", Href = "/" },
+            new BreadcrumbItem { Text = "Video Presentation", IsCurrentPage = true }
+        ];
+
+        await LoadPage();
+    }
+
+    private async Task LoadPage()
+    {
+        await Task.Delay(1000);
+        _isLoading = false;
+    }
+}
+
+<style>
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        height: 100vh;
+        align-items: center;
+    }
+
+    .container {
+        display: flex;
+        justify-content: center; 
+        align-items: center;     
+        height: 100%;            
+        width: 100%;             
+    }
+
+    video {
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        cursor: url("/src/Wand_A.cur"), auto;
+    }
+</style>

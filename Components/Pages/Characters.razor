@@ -1,0 +1,217 @@
+@page "/Characters"
+@using Morten_Lunde_Eksamen_Emne_6.Models
+@using Morten_Lunde_Eksamen_Emne_6.Services
+@inject IHarryPotterService HarryPotterService
+
+<title>Characters</title>
+<div class="main-container">
+    <Breadcrumb Items="_navItems" Class="breadcrumb-header" />
+    
+    @if (_characters == null)
+    {
+        <div class="d-flex justify-content-center">
+            <Spinner Type="SpinnerType.Dots" Class="me-3" Color="SpinnerColor.Warning" Size="SpinnerSize.Large"/>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="search-container">
+                <InputText @bind-Value="_searchWord"
+                           @oninput="HandleSearchInput"
+                           placeholder="Search name, house, actor or species..."
+                           class="form-control"/><br/>
+            </div>
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5 g-5">
+                @if (!_filteredCharacters!.Any())
+                {
+                    <p>No items available.</p>
+                }
+                @foreach (Character character in GetPagedCharacters())
+                {
+                    <div class="col">
+                        <Card Class="mb-4 h-100" Style="width: 100%; background: #f5deb3; border: 2px solid #b8860b;">
+                            @if (!string.IsNullOrEmpty(character.image))
+                            {
+                                <img style="max-height: 250px; max-width: 100%; object-fit: cover; object-position: top;" src="@character.image" alt="@character.name" class="img-fluid"/>
+                            }
+                            else
+                            {
+                                <img style="max-height: 250px; max-width: 100%; object-fit: cover; object-position: top;" src="/images/placeholder.png" alt="Placeholder" class="img-fluid"/>
+                            }
+
+                            <CardBody>
+                                <CardTitle>@character.name</CardTitle>
+                                <CardText>@character.house</CardText>
+                            </CardBody>
+                            <CardFooter>
+                                <a href="@($"details/{character.id}")">View Details</a>
+                            </CardFooter>
+                        </Card>
+                    </div>
+                }
+            </div><br/>
+            <Pagination
+                Class="pag-controll"
+                ActivePageNumber="@_currentPage"
+                TotalPages="@_totalPages"
+                PageChanged="OnPageChangedAsync"/>
+        </div>
+    }
+</div>
+
+@code {
+    private List<Character>? _characters;
+    private List<Character>? _filteredCharacters;
+    private int _currentPage = 1;
+    private int _totalPages;
+    private const int PageSize = 5;
+    private string? _searchWord;
+    
+    private List<BreadcrumbItem>? _navItems;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _navItems =
+        [
+            new BreadcrumbItem { Text = "Home", Href = "/" },
+            new BreadcrumbItem { Text = "Characters", IsCurrentPage = true }
+        ];
+        
+        await LoadCharacters();
+    }
+
+    private async Task LoadCharacters()
+    {
+        try
+        {
+            _characters = await HarryPotterService.GetCharactersAsync();
+            ApplySearchFilter();
+        }
+        catch (Exception ex)
+        {
+            await Console.Error.WriteLineAsync($"Error fetching characters: {ex.Message}");
+            _characters = [];
+            _filteredCharacters = [];
+        }
+    }
+
+    private void HandleSearchInput(ChangeEventArgs e)
+    {
+        _searchWord = e.Value?.ToString() ?? string.Empty;
+        _currentPage = 1;
+        ApplySearchFilter();
+        StateHasChanged();
+    }
+
+    private void ApplySearchFilter()
+    {
+        if (string.IsNullOrWhiteSpace(_searchWord))
+        {
+            _filteredCharacters = _characters;
+        }
+        else
+        {
+            _filteredCharacters = _characters?.Where(c =>
+                c.name.Contains(_searchWord, StringComparison.OrdinalIgnoreCase) ||
+                c.house.Contains(_searchWord, StringComparison.OrdinalIgnoreCase) ||
+                c.actor.Contains(_searchWord, StringComparison.OrdinalIgnoreCase) ||
+                c.species.Contains(_searchWord, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        _totalPages = (int)Math.Ceiling((double)(_filteredCharacters?.Count ?? 0) / PageSize);
+    }
+
+    private IEnumerable<Character> GetPagedCharacters()
+    {
+        return _filteredCharacters?.Skip((_currentPage - 1) * PageSize).Take(PageSize) ?? [];
+    }
+    
+    private async Task OnPageChangedAsync(int newPageNumber)
+    {
+        await Task.Run(() => { _currentPage = newPageNumber; });
+    }
+}
+
+<style>
+    .container {
+        justify-content: center;
+        display: flex;
+        flex-direction: column;
+    }
+    .main-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .mb-4.h-100 a {
+        color: black;
+    }
+    
+    .mb-4.h-100:hover {
+        box-shadow: 0 0 10px #ffcc00, 0 0 20px #ffcc00;
+    }
+
+    .search-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 25px;
+    }
+
+    .form-control {
+        font-size: larger;
+        width: 350px;
+        background: rgba(255, 255, 255, 0.0);
+        color: white;
+        border: 1px solid #b8860b;
+    }
+
+    .form-control::placeholder {
+        color: white;
+    }
+
+    .form-control:focus {
+        background: rgba(255, 255, 255, 0.0);
+        color: white;
+        border-color: #b8860b;
+        outline: none;
+    }
+
+    .pag-controll {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px; /* Space between page numbers */
+        margin-top: 25px;
+        font-size: larger;
+        cursor: url("/src/Wand_A.cur"), auto;
+    }
+
+    .pag-controll a {
+        background-color: #ffcc00; /* Yellow background */
+        color: black; /* Black text */
+        text-decoration: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        border: 1px solid #b8860b; /* Optional: brownish border for consistency */
+        transition: all 0.3s ease-in-out;
+    }
+
+    .pag-controll a:hover {
+        background-color: #b8860b;
+        color: white;
+        border-color: #ffcc00;
+        cursor: url("/src/Wand_A.cur"), auto;
+    }
+
+    .pag-controll .page-item.active a {
+        background-color: #b8860b;
+        color: white;
+        font-weight: bold;
+        border: 1px solid #ffcc00;
+        pointer-events: none;
+    }
+</style>
