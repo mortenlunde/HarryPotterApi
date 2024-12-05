@@ -1,5 +1,6 @@
 // ReSharper disable InconsistentNaming
 // ReSharper disable UnusedAutoPropertyAccessor.Global
+// ReSharper disable CollectionNeverUpdated.Global
 namespace Morten_Lunde_Eksamen_Emne_6.Models;
 
 public class Character

@@ -5,114 +5,118 @@
 
 <title>@_character?.name</title>
 <div class="main-container">
-    <Breadcrumb Items="_navItems" Class="breadcrumb-header" />
+    <Breadcrumb Items="_navItems" Class="breadcrumb-header"/>
 
-@if (_character == null)
-{
-    <p>Loading...</p>
-}
-else
-{
-    <div class="container">
-
-        <div class="card" style="width: 100%; background: #f5deb3; border: 2px solid #b8860b;">
-            <div class="row g-0">
-                <div class="col-md-4">
-                    @if (!string.IsNullOrEmpty(_character.image))
-                    {
-                        <img src="@_character.image" alt="@_character.name" class="img-fluid rounded-start" />
-                    }
-                    else
-                    {
-                        <img src="/images/placeholder.png" alt="Placeholder" class="img-fluid rounded-start" />
-                    }
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h2 class="card-title">@_character.name</h2>
-                        <table class="table table-bordered table-striped">
-                            <tr>
-                                <th>House</th>
-                                <td>@_character.house</td>
-                            </tr>
-                            <tr>
-                                <th>Species</th>
-                                <td>@_character.species</td>
-                            </tr>
-                            <tr>
-                                <th>Gender</th>
-                                <td>@_character.gender</td>
-                            </tr>
-                            <tr>
-                                <th>Date of Birth</th>
-                                <td>@_character.dateOfBirth</td>
-                            </tr>
-                            <tr>
-                                <th>Ancestry</th>
-                                <td>@_character.ancestry</td>
-                            </tr>
-                            <tr>
-                                <th>Eye Colour</th>
-                                <td>@_character.eyeColour</td>
-                            </tr>
-                            <tr>
-                                <th>Hair Colour</th>
-                                <td>@_character.hairColour</td>
-                            </tr>
-                            <tr>
-                                <th>Patronus</th>
-                                <td>@_character.patronus</td>
-                            </tr>
-                            <tr>
-                                <th>Actor</th>
-                                <td>@_character.actor</td>
-                            </tr>
-                            <tr>
-                                <th>Alternative Actor</th>
-                                <td>@string.Join(", ", _character.alternate_actors)</td>
-                            </tr>
-                            <tr>
-                                <th>Alternate Names</th>
-                                <td>@string.Join(", ", _character.alternate_names)</td>
-                            </tr>
-                            <tr>
-                                <th>Wand</th>
-                                <td>
-                                    @if (_character.Wand != null)
-                                    {
-                                        <text>Wood: </text> @_character.Wand.wood<br/>
-                                        <text>core: </text> @_character.Wand.core<br/>
-                                        <text>Length: </text> @_character.Wand.length
-                                    }
-                                    else
-                                    {
-                                        <em>No wand information available</em>
-                                    }
-                                </td>
-                            </tr>
-                            <tr>
-                                <th>Alive</th>
-                                <td>@(_character.alive ? "Yes" : "No")</td>
-                            </tr>
-                            <tr>
-                                <th>Wizard</th>
-                                <td>@(_character.wizard ? "Yes" : "No")</td>
-                            </tr>
-                            <tr>
-                                <th>Staff</th>
-                                <td>@(_character.hogwartsStaff ? "Yes" : "No")</td>
-                            </tr>
-                            <tr>
-                                <th>Student</th>
-                                <td>@(_character.hogwartsStudent ? "Yes" : "No")</td>
-                            </tr>
-                        </table>
+    @if (_character == null)
+    {
+        <div class="d-flex justify-content-center">
+            <Spinner Type="SpinnerType.Dots" Class="me-3" Color="SpinnerColor.Warning" Size="SpinnerSize.Large"/>
+        </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="card" style="width: 100%; background: #f5deb3; border: 2px solid #b8860b;">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        @if (!string.IsNullOrEmpty(_character.image))
+                        {
+                            <img src="@_character.image" alt="@_character.name" class="img-fluid rounded-start"/>
+                        }
+                        else
+                        {
+                            <img src="/images/placeholder.png" alt="Placeholder" class="img-fluid rounded-start"/>
+                        }
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h2 class="card-title">@_character.name</h2>
+                            <table class="table table-bordered table-striped">
+                                <tr>
+                                    <th>House</th>
+                                    <td>@_character.house</td>
+                                </tr>
+                                <tr>
+                                    <th>Species</th>
+                                    <td>@_character.species</td>
+                                </tr>
+                                <tr>
+                                    <th>Gender</th>
+                                    <td>@_character.gender</td>
+                                </tr>
+                                <tr>
+                                    <th>Date of Birth</th>
+                                    <td>@_character.dateOfBirth</td>
+                                </tr>
+                                <tr>
+                                    <th>Ancestry</th>
+                                    <td>@_character.ancestry</td>
+                                </tr>
+                                <tr>
+                                    <th>Eye Colour</th>
+                                    <td>@_character.eyeColour</td>
+                                </tr>
+                                <tr>
+                                    <th>Hair Colour</th>
+                                    <td>@_character.hairColour</td>
+                                </tr>
+                                <tr>
+                                    <th>Patronus</th>
+                                    <td>@_character.patronus</td>
+                                </tr>
+                                <tr>
+                                    <th>Actor</th>
+                                    <td>@_character.actor</td>
+                                </tr>
+                                <tr>
+                                    <th>Alternative Actor</th>
+                                    <td>@string.Join(", ", _character.alternate_actors!)</td>
+                                </tr>
+                                <tr>
+                                    <th>Alternate Names</th>
+                                    <td>@string.Join(", ", _character.alternate_names!)</td>
+                                </tr>
+                                <tr>
+                                    <th>Wand</th>
+                                    <td>
+                                        @if (_character.Wand != null)
+                                        {
+                                            <text>Wood: </text>
+                                            @_character.Wand.wood<br/>
+                                            <text>core: </text>
+                                            @_character.Wand.core<br/>
+                                            <text>Length: </text>
+                                            @_character.Wand.length
+                                        }
+                                        else
+                                        {
+                                            <em>No wand information available</em>
+                                        }
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>Alive</th>
+                                    <td>@(_character.alive ? "Yes" : "No")</td>
+                                </tr>
+                                <tr>
+                                    <th>Wizard</th>
+                                    <td>@(_character.wizard ? "Yes" : "No")</td>
+                                </tr>
+                                <tr>
+                                    <th>Staff</th>
+                                    <td>@(_character.hogwartsStaff ? "Yes" : "No")</td>
+                                </tr>
+                                <tr>
+                                    <th>Student</th>
+                                    <td>@(_character.hogwartsStudent ? "Yes" : "No")</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-}
+    }
 </div>
 @code {
     [Parameter] public Guid Id { get; set; }
@@ -127,7 +131,21 @@ else
             new BreadcrumbItem { Text = "Characters", Href = "/characters"},
             new BreadcrumbItem {Text = "Details", IsCurrentPage = true}
         ];
-        _character = await HarryPotterService.GetCharacterDetailsAsync(Id);
+        await LoadCharacter();
+    }
+    
+    private async Task LoadCharacter()
+    {
+        try
+        {
+            await Task.Delay(1000);
+            _character = await HarryPotterService.GetCharacterDetailsAsync(Id);
+        }
+        catch (Exception ex)
+        {
+            await Console.Error.WriteLineAsync($"Error fetching characters: {ex.Message}");
+            _character = null;
+        }
     }
 }
 

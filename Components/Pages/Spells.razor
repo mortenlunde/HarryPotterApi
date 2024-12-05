@@ -2,6 +2,7 @@
 @using Morten_Lunde_Eksamen_Emne_6.Models
 @using Morten_Lunde_Eksamen_Emne_6.Services
 @inject IHarryPotterService HarryPotterService
+<!--suppress CssUnknownTarget -->
 
 <title>Spells</title>
 <div class="main-container">
@@ -68,8 +69,8 @@
 
 @code {
     private List<Spell>? _spells;
-    private List<Spell> _pagedSpellsPage1 = new List<Spell>();
-    private List<Spell> _pagedSpellsPage2 = new List<Spell>();
+    private List<Spell> _pagedSpellsPage1 = [];
+    private List<Spell> _pagedSpellsPage2 = [];
     private const int PageSize = 8;
     private int _currentPage = 1;
     private int _totalPages = 1;
@@ -235,5 +236,4 @@
         background: #ffe4c4;
         cursor: url("/src/Wand_A.cur"), auto;
     }
-
 </style>
